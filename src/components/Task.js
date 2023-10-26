@@ -7,14 +7,50 @@ import {
   AiOutlineCalendar,
 } from "react-icons/ai";
 
-function Task() {
+function Task({task}) {
+  //-------------
+  //Local States
+  //-------------
+
+  //Handle Edit
+  const handleEdit = () => {
+    isEditing = true;
+  };
+  //Handle Edit
+  const handleCancelEdit = () => {
+    setIsEditing = false;
+    setNewTaskDescription(localState.task);
+  };
+
+  //Handle Edit
+  const handleUpdate = () => {
+  };
+
+  //Handle render Task Description
+  const handleRenderTaskDescription = () => {};
+
+  //Handle start
+  const handleStart = () => {};
+
+  //Handle pause
+  const handlePause = () => {};
+
+  //Handle delete
+  const handleDelete = () => {};
+
+  //Handle render buttons
+  const handleRenderButtons = () => {};
+
+  const [localState, setLocalState] = useState(task);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTaskDescription, setNewTaskDescription] = useState(localState.task);
   return (
     <div className="bg-white p-4 rounded-md text-black shadow-lg flex flex-col md:flex-row md:items-center justify-between">
       <div className="md:space-x-2 space-y-2 md:space-y-0">
         {/* render buttons */}
         <div className="flex items-center space-x-2">
           <AiOutlineCalendar className="text-gray-600" />
-          <p className="text-gray-600">2-2-2-2</p>
+          <p className="text-gray-600">{task.task}</p>
         </div>
       </div>
       <div className="flex items-center space-x-2 justify-center">

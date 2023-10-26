@@ -1,8 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineLogout } from "react-icons/ai";
+import { getAuth } from "firebase/auth";
+import { collection, getFirestore, query, where, onSnapshot, QuerySnapshot } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import Task from "./Task";
+import app from "../firebase/config";
 
-function Dashboard() {
+//Instance of FireStore
+const db = getFirestore(app);
+//Instance of Auth
+const auth = getAuth(app);
+
+function Reports() {
+  //Local states
+  const [loading,setLoading] = useState(true);
+  const [error,setError] = useState(null);
+  const [tasks,setTasks] = useState([]);
+  const [thisWeekTotal,setThisWeekTotal] = useState(0);
+  const [thisMonthTotal,setThisMonthTotal] = useState(0);
+  const [totalTime,setTotalTime] = useState(0);
+
+
+  //----------
+  //Fetch Data
+  //----------
+  useEffect(() => {
+    //fetch data
+    const fetchData = () => {
+      try {
+        setLoading(true);
+        setError(null);
+        if(auth.currentUser){
+          //Make Query
+          const q = query(collection(db, "tasks"), where('userId', "==", auth.currentUser.uid) );
+          //on Snapshot
+          const unsubscribe = onSnapshot(q, (querySnapshot)=>{
+            //get data from db
+            setTasks(
+              querySnapshot.docs.map((doc)=>{
+                return {
+                  ...doc.data(),
+                  id: doc.id,
+                  date: new Date(doc.data().startTime).toISOString(),
+                }
+              })
+            )
+          });
+        }else{
+          setError("Please SignIn");
+          setLoading(false);
+        }
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+        return () => {};
+      }
+    };
+    //Call the Function
+    const unSubscribe = fetchData();
+    //Clean Up
+    return () => {
+      if(unSubscribe){
+        unSubscribe();
+      }
+    };
+  },[]);
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
       <div className="container mx-auto px-4 py-10">
@@ -52,11 +114,15 @@ function Dashboard() {
             </button>
           </div>
 
-          <div className="space-y-4">{/* Task here */}</div>
+          {<div className="space-y-4">{
+            tasks.map((task)=>(
+              <Task key={task.id} task={task} />
+            ))
+          }</div>}
         </div>
       </div>
     </div>
   );
 }
 
-export default Dashboard;
+export default Reports;
