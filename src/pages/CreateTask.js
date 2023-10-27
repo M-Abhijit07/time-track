@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AiOutlineFieldTime } from "react-icons/ai";
+import { useNavigate, Link } from "react-router-dom";
+import { AiOutlineFieldTime, AiOutlineCloseCircle } from "react-icons/ai";
 import {addDoc, getFirestore, collection} from 'firebase/firestore'
 import {getAuth} from 'firebase/auth' 
 import app from "../firebase/config";
@@ -40,8 +40,15 @@ function CreateTaskPage() {
     }
   }
   return (
+
     <div className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 min-h-screen flex items-center justify-center">
       <div className="bg-white bg-opacity-10 p-10 rounded-lg backdrop-filter backdrop-blur-lg shadow-lg max-w-md w-full">
+        <header className="flex flex-col sm:flex-row justify-end">
+          <Link to={"/reports"} className="text-white" title="Close">
+            <AiOutlineCloseCircle className="text-2xl" />
+          </Link>
+        </header>
+        <br></br>
         <h1 className="text-4xl font-bold text-white mb-4 text-shadow flex items-center space-x-2">
           <AiOutlineFieldTime />
           <span>Create a new task</span>
@@ -71,8 +78,8 @@ function CreateTaskPage() {
           </div>
           <div className="flex justify-end">
             <button
-              disabled = {loading}
-              type="submit"
+              disabled = {loading} 
+              to = "/reports"
               className="w-full bg-gradient-to-r from-pink-500 to-purple-500 bg-opacity-50 hover:bg-opacity-75 text-white py-3 px-6 rounded focus:outline-none focus:ring-2 focus:ring-white"
             >
               {loading ? 'Task Created':'Create Task'}
