@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore,updateDoc, onSnapshot, doc } from "firebase/firestore";
+import { getFirestore,updateDoc, onSnapshot, doc, deleteDoc } from "firebase/firestore";
 import { BsCircleFill } from "react-icons/bs";
 import { format } from 'date-fns';
 import {
@@ -116,25 +116,32 @@ function Task({task}) {
   };
 
   //Handle delete
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    try {
+      await deleteDoc(doc(db,'tasks',localTask.id));
+      alert('Task Deleted successfully');
+    } catch (error) {
+      alert('Task Deletion Failed');
+    }
+  };
 
   //Handle render buttons
   const handleRenderButtons = () => {
     switch(localTask.status){
       case 'unstarted':
         return (
-          <AiOutlinePlayCircle className='text-2xl text-purple-400' onClick={handleStart} />
+          <AiOutlinePlayCircle className='text-2xl text-purple-400 cursor-pointer' onClick={handleStart} />
         )
 
       case 'in_progress':
         return (
-          <AiOutlinePauseCircle className='text-2xl text-green-400' onClick={handlePause} />
+          <AiOutlinePauseCircle className='text-2xl text-green-400 cursor-pointer' onClick={handlePause} />
         )
 
       default:
         case "unstarted":
         return (
-          <AiOutlineReload className='text-2xl text-green-400' onClick={handleStart} />
+          <AiOutlineReload className='text-2xl text-green-400 cursor-pointer' onClick={handleStart} />
         )
     }
   };
@@ -161,8 +168,8 @@ function Task({task}) {
       <div className="flex items-center space-x-2 justify-center md:justify-end">
         {/* Render buttons */}
         {handleRenderButtons()}
-        <AiOutlineEdit onClick={handleEdit} className="text-2xl text-purple-400" />
-        <AiOutlineDelete className="text-2xl text-red-500" />
+        <AiOutlineEdit onClick={handleEdit} className="text-2xl text-purple-400 cursor-pointer" />
+        <AiOutlineDelete onClick={handleDelete} className="text-2xl text-red-500 cursor-pointer" />
       </div>
     </div>
   );
