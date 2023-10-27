@@ -11,6 +11,7 @@ import {
   AiOutlinePauseCircle, 
   AiOutlineReload
 } from "react-icons/ai";
+import {FaCheck, FaTimes} from "react-icons/fa";
 import app from "../firebase/config";
 
 //Instatnce of FireStore
@@ -26,20 +27,46 @@ function Task({task}) {
 
   //Handle Edit
   const handleEdit = () => {
-    isEditing = true;
+    setIsEditing(true);
   };
   //Handle Edit
   const handleCancelEdit = () => {
-    setIsEditing = false;
+    setIsEditing(false);
     setNewTaskDescription(localTask.task);
   };
 
-  //Handle Edit
-  const handleUpdate = () => {
+  //Handle Update
+  const handleUpdate = async () => {
+    try {
+      await updateDoc(doc(db,'tasks',localTask.id),{
+        task: newTaskDescription
+      });
+      //Update State
+      setLocalTask((prevSate) => ({...prevSate, task: newTaskDescription}));
+      setIsEditing(false);
+    } catch (error) {
+      console.log('Error in pausing task: ',error);
+    }
   };
 
   //Handle render Task Description
-  const handleRenderTaskDescription = () => {};
+  const renderTaskDescription = () => {
+    if(isEditing) {
+      return(
+        <div className="flex space-x-2">
+          <input 
+            value={newTaskDescription} 
+            onChange={(e)=>setNewTaskDescription(e.target.value)} 
+            className="border border-purple-300 rounded px-2 py-1" />
+
+            <FaCheck className="text-green-400 cursor-pointer m-2" onClick={handleUpdate} />
+            <FaTimes className="text-red-400 cursor-pointer m-2" onClick={handleCancelEdit} />
+        </div>
+      )
+    }
+
+    return  <p className="text-gray-600 font-bold">{task.task}</p>
+  };
 
   //Handle start
   const handleStart = async () => {
@@ -116,12 +143,13 @@ function Task({task}) {
     <div className="bg-white p-4 rounded-md text-black shadow-lg flex flex-col md:flex-row md:items-center justify-between">
       <div className="md:space-x-2 space-y-2 md:space-y-0">
         {/* render description */}
+        {renderTaskDescription()}
         <div className="flex items-center space-x-2">
           <AiOutlineCalendar className="text-gray-600" />
           <p className="text-gray-600">{
             format(new Date(localTask.date), 'dd/MM/yyyy')
           }</p>
-          <p className="text-gray-600">{task.task}</p>
+          
         </div>
       </div>
       <div className="flex items-center space-x-2 justify-center">
@@ -133,7 +161,7 @@ function Task({task}) {
       <div className="flex items-center space-x-2 justify-center md:justify-end">
         {/* Render buttons */}
         {handleRenderButtons()}
-        <AiOutlineEdit className="text-2xl text-purple-400" />
+        <AiOutlineEdit onClick={handleEdit} className="text-2xl text-purple-400" />
         <AiOutlineDelete className="text-2xl text-red-500" />
       </div>
     </div>
