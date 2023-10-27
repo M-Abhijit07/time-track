@@ -136,6 +136,12 @@ function Reports() {
     link.download = "tasks.csv";
     link.click();
   };
+  //-------
+  //Logout
+  //-------
+  const handleLogout = () => {
+    auth.signOut();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
@@ -143,7 +149,7 @@ function Reports() {
         <header className="flex justify-between py-6">
           <h1 className="text-4xl font-bold text-white">Time Tracker</h1>
           <button className="text-white" title="Logout">
-            <AiOutlineLogout className="text-2xl" />
+            <AiOutlineLogout onClick={handleLogout} className="text-2xl" />
           </button>
         </header>
         <div className="bg-white p-4 my-6 rounded-md text-black max-w-md mx-auto">

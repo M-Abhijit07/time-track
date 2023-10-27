@@ -8,3 +8,4 @@
 [1027/200536.516:ERROR:registration_protocol_win.cc(107)] CreateFile: The system cannot find the file specified. (0x2)
 [1027/203755.630:ERROR:check.cc(298)] Check failed: false. NOTREACHED log messages are omitted in official builds. Sorry!
 [1027/211145.834:ERROR:registration_protocol_win.cc(107)] CreateFile: The system cannot find the file specified. (0x2)
+[1027/212638.353:ERROR:registration_protocol_win.cc(107)] CreateFile: The system cannot find the file specified. (0x2)
