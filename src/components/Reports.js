@@ -113,6 +113,29 @@ function Reports() {
     const date = addMilliseconds(new Date(0), timeInMillis);
     return format(date, "HH:mm:ss");
   };
+  //------------
+  //Export Tasks
+  //------------
+  const exportTasks = () => {
+    //Generate Export data
+    const exportData = tasks.map((task)=>{
+      return {
+        name: task.task,
+        date: format(new Date(task.date), "dd/MM/yyyy"),
+        status: task.status
+      };
+    });
+
+    //Conver to csv
+    const csvContent = 'data:text/csv;charset=utf-8,' + exportData.map((row)=>Object.values(row).join(",")).join("\n");
+
+    //Downlaod
+    const link = document.createElement("a");
+    link.href = encodeURI(csvContent);
+    link.target = "_blank";
+    link.download = "tasks.csv";
+    link.click();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 to-blue-500">
@@ -158,7 +181,7 @@ function Reports() {
             >
               Add New Task
             </Link>
-            <button className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded text-white">
+            <button onClick={exportTasks} className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded text-white">
               Export
             </button>
           </div>
